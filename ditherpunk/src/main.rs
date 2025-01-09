@@ -50,7 +50,7 @@ const YELLOW: image::Rgb<u8> = image::Rgb([255, 255, 0]);
 const MAGENTA: image::Rgb<u8> = image::Rgb([255, 0, 255]);
 const CYAN: image::Rgb<u8> = image::Rgb([0, 255, 255]);
 
-use image::{ImageError, RgbImage};
+use image::{ImageError, RgbImage, RgbaImage, Rgba, Rgb};
 
 fn main() -> Result<(), ImageError>{
     let args: DitherArgs = argh::from_env();
@@ -77,5 +77,27 @@ fn main() -> Result<(), ImageError>{
         }
     }
     img2_rgb.save("img/question5.jpg")?;
+
+
+    // Créer une nouvelle image pour les pixels monochromes
+    let mut img_monochrome: RgbaImage = RgbaImage::new(img2_rgb.width(), img2_rgb.height());
+
+    // Seuillage et conversion en monochrome
+    for (x, y, pixel) in img_rgb.enumerate_pixels() {
+        // Accéder directement aux valeurs R, G, B
+        let (r, g, b) = (pixel[0], pixel[1], pixel[2]);
+        
+        // Calculer la luminosité
+        let luminosity = 0.2989 * r as f32 + 0.5870 * g as f32 + 0.1140 * b as f32;
+
+        // Appliquer le seuillage
+        let color = if luminosity > 127.0 { 255 } else { 0 };  // Seuil à 50% de 255
+
+        // Assigner la couleur du pixel en monochrome
+        img_monochrome.put_pixel(x, y, Rgba([color, color, color, 255]));
+    }
+    
+    // Sauvegarder l'image résultante
+    img_monochrome.save("img/question7.png")?;
     Ok(())
 }
