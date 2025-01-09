@@ -55,10 +55,27 @@ use image::{ImageError, RgbImage};
 fn main() -> Result<(), ImageError>{
     let args: DitherArgs = argh::from_env();
     let path_in = args.input;
-
+     
+    // Image to image RGB
     let img = image::open(&path_in)?;
     let img_rgb = img.to_rgb8();
     img_rgb.save("img/question3.png")?;
-    println!("Image ouverte: {}x{}", img_rgb.width(), img_rgb.height());
+    println!("Image Convertie en RGB");
+
+    // Afficher couleur pixel (32, 52)
+    let pixel = img_rgb.get_pixel(32, 52);
+    println!("Couleur du pixel (32, 52) : {:?}", pixel);
+
+    //  un pixel sur deux d’une image en blanc
+    let img2 = image::open("img/image.jpg")?;
+    let mut img2_rgb = img2.to_rgb8();
+    for y in 0..img2_rgb.height() {
+        for x in 0..img2_rgb.width() {
+            if (x + y) % 2 == 0 {
+                img2_rgb.put_pixel(x, y, WHITE);
+            }
+        }
+    }
+    img2_rgb.save("img/question5.jpg")?;
     Ok(())
 }
