@@ -50,8 +50,13 @@ const YELLOW: image::Rgb<u8> = image::Rgb([255, 255, 0]);
 const MAGENTA: image::Rgb<u8> = image::Rgb([255, 0, 255]);
 const CYAN: image::Rgb<u8> = image::Rgb([0, 255, 255]);
 
-fn main() -> Result<(), ImageError>{
-    let args: DitherArgs = argh::from_env();
-    let path_in = args.input;
+use image::{open, DynamicImage, RgbImage};
+
+fn main() -> Result<(), image::ImageError> {
+
+    let img: DynamicImage = open("../img/image.jpg")?;
+    let rgb_image: RgbImage = img.to_rgb8();
+
+    println!("Image convertie en mode Rgb8 !");
     Ok(())
 }
